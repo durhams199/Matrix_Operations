@@ -90,3 +90,24 @@ class Matrix:
     # Returns: matrix that is a result of subtracting the two matrices
     def subtract_matrix(self, matrix_other):
         return self.add_matrix(matrix_other.multiply_by_scalar(-1))
+
+    # Precondition: width of first matrix must equal height of second matrix
+    #               raised ValueError otherwise
+    # Parameter: matrix_other - matrix to be multiplied with original matrix
+    # Returns: matrix that represents product of the two matrices
+    def multiply_matrix(self, matrix_other):
+        if (self.width != matrix_other.height):
+            raise ValueError("width of first matrix must equal height of second matrix")
+
+        product_matrix = Matrix(self.height, matrix_other.width)
+        for i in range(product_matrix.height):
+            row_product = []
+            for j in range(product_matrix.width):
+                sum_of_products = 0
+                for k in range(self.width):
+                    sum_of_products += (self.matrix[i][k] *
+                                        matrix_other.matrix[k][j])
+                print(sum_of_products)
+                row_product.append(sum_of_products)
+            product_matrix.set_row(i + 1, row_product)
+        return product_matrix
