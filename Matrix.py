@@ -54,6 +54,7 @@ class Matrix:
         
         sum_matrix = Matrix(self.height, self.width)
         for i in range(self.height):
+            
             row_sum = []
             for j in range(self.width):
                 sum = self.matrix[i][j] + matrix_other.matrix[i][j]
@@ -62,7 +63,7 @@ class Matrix:
 
         return sum_matrix
 
-    # Returns: True is matrices has same dimensions
+    # Returns: True if matrices has same dimensions
     #          False otherwise
     def is_addable(self, matrix_other):
         if (self.height != matrix_other.height or self.width != matrix_other.width):
@@ -70,4 +71,22 @@ class Matrix:
         else:
             return True
 
+    # Parameter: scalar - number to be multipled with matrix
+    # Returns: Matrix that represents product of original matrix and scalar
+    def multiply_by_scalar(self, scalar):
+        scalar_matrix = Matrix(self.height, self.width)
 
+        for i in range(self.height):
+            
+            row_product = []
+            for j in range(self.width):
+                product = self.matrix[i][j] * scalar
+                row_product.append(product)
+            scalar_matrix.set_row(i + 1, row_product)
+
+        return scalar_matrix
+
+    # Parameter: matrix_other - matrix to be subtracted
+    # Returns: matrix that is a result of subtracting the two matrices
+    def subtract_matrix(self, matrix_other):
+        return self.add_matrix(matrix_other.multiply_by_scalar(-1))
