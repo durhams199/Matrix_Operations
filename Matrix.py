@@ -23,12 +23,16 @@ class Matrix:
         return matrix
 
     # public instance methods
+
     # Preconditions: row number must be valid (raises IndexError otherwise)
     #                value_list must be a list with correct number of entries
     #                   (raises ValueError otherwise)
     # Parameters: row_num - row to be replaced
     #             value_list - list of values to replace row in matrix
     # Postcondition: requested row is replaced with new row of values
+    # Errors: raises IndexError if row number is out of bounds
+    #         raises ValueError if list isn't passed or 
+    #         list is incorrect size
     def set_row(self, row_num, value_list):
         if (row_num > self.height or row_num <= 0):
             raise IndexError("invalid row number")
@@ -48,6 +52,7 @@ class Matrix:
     #               (ValueError is raised otherwise)
     # Parameters: matrix_other - matrix to be added
     # Returns: matrix that is the sum of the two matrices
+    # Errors: raises ValueError if matrices aren't equal in dimension
     def add_matrix(self, matrix_other):
         if (not self.is_addable(matrix_other)):
             raise ValueError("matrices must have equal dimensions to be added")
@@ -95,6 +100,7 @@ class Matrix:
     #               raised ValueError otherwise
     # Parameter: matrix_other - matrix to be multiplied with original matrix
     # Returns: matrix that represents product of the two matrices
+    # Errors: raises ValueError if width of first matrix != height of other matrix
     def multiply_matrix(self, matrix_other):
         if (self.width != matrix_other.height):
             raise ValueError("width of first matrix must equal height of second matrix")
@@ -111,3 +117,40 @@ class Matrix:
                 row_product.append(sum_of_products)
             product_matrix.set_row(i + 1, row_product)
         return product_matrix
+
+    # Returns: true if matrix is invertible, false otherwise
+    # Errors: Allows ValueError for self.get_determinant()
+    def is_invertible(self):
+        try:
+            self.get_determinant()
+        except:
+            return False
+        else:
+            return (self.get_determinant() != 0)
+
+    # Returns: determinant for matrix
+    # Errors: raises ValueError is matrix isn't n x n
+    def get_determinant(self):
+        if (self.height != self.width):
+            raise ValueError("determinant can only be" + 
+                             " calcuated for square matrices")
+
+        if (self.height == 2):
+            return ((self.matrix[0][0] * self.matrix[1][1]) - 
+                     (self.matrix[0][1] * self.matrix[1][0]))
+        
+        determinant = 0
+        sign = 1
+        for i in range(self.width):
+            
+            reduced_matrix = Matrix(self.width - 1, self.height - 1)
+            for j in range(1, self.height):
+
+                matrix_row = []
+                for k in range(self.width):
+                    if (k != i):
+                        matrix_row.append(self.matrix[j][k])     
+                reduced_matrix.set_row(j, matrix_row)
+            determinant += sign*self.matrix[0][i] * reduced_matrix.get_determinant()
+            sign *= -1
+        return determinant
