@@ -113,7 +113,6 @@ class Matrix:
                 for k in range(self.width):
                     sum_of_products += (self.matrix[i][k] *
                                         matrix_other.matrix[k][j])
-                print(sum_of_products)
                 row_product.append(sum_of_products)
             product_matrix.set_row(i + 1, row_product)
         return product_matrix
@@ -155,13 +154,35 @@ class Matrix:
             sign *= -1
         return determinant
 
-
+    # Precondition: matrix get_inverse is called on must be invertible
+    # Returns: inverse of original matrix
+    # Errors: raises ValueError if matrix is not invertible
     def get_inverse(self):
 
         if (not self.is_invertible()):
             raise ValueError("Matrix is not invertible")
 
         # first we find the matrix of minors
+        matrix_of_minors = self.get_matrix_of_minors()
+
+        # next we find the matrix of cofactors from the matrix of minors
+        matrix_of_cofactors = matrix_of_minors.get_matrix_of_cofactors()
+
+        # now we must find the adjugate matrix by transposing cofactor matrix
+        adjugate_matrix = matrix_of_cofactors.get_transposition()
+
+        # lastly we must multiply by the reciprocal of the determinant 
+        # of the original matrix
+        inverse_matrix = adjugate_matrix.multiply_by_scalar(1/self.get_determinant())
+        return inverse_matrix
+
+    # Precondition: matrix get_matrix_of_minors is called on must be invertible
+    # Returns: matrix of minors of original matrix
+    # Errors: raises ValueError if matrix is not invertible
+    def get_matrix_of_minors(self):
+        if (not self.is_invertible()):
+            raise ValueError("Matrix must be invertible")       
+
         matrix_of_minors = Matrix(self.height, self.width)
         for i in range(self.height):
 
@@ -182,22 +203,33 @@ class Matrix:
                             temp_matrix.set_row(k, temp_matrix_row)
                 minor_matrix_row.append(temp_matrix.get_determinant())
             matrix_of_minors.set_row(i+1, minor_matrix_row)
-
-        # next we find the matrix of cofactors
-        sign = 1
-        for i in range(matrix_of_minors.height):
-            cofactor_row = []
-            for j in range(matrix_of_minors.width):
-                cofactor_row.append(sign*matrix_of_minors.matrix[i][j])
-                sign *= -1
-            matrix_of_minors.set_row(i+1, cofactor_row)
-
-
         return matrix_of_minors
 
-m1 = Matrix(3,3)
+    # Returns: matrix of cofactors of original matrix
+    def get_matrix_of_cofactors(self):
+        sign = 1
+        matrix_of_cofactors = Matrix(self.height, self.width)
+        for i in range(self.height):
+            cofactor_row = []
+            for j in range(self.width):
+                cofactor_row.append(sign*self.matrix[i][j])
+                sign *= -1
+            matrix_of_cofactors.set_row(i+1, cofactor_row)
+        return matrix_of_cofactors
 
-m1.set_row(1, [3,0,2])
-m1.set_row(2, [2,0,-2])
-m1.set_row(3, [0,1,1])
-print(m1.get_inverse().matrix)
+    # Precondition: Matrix must be a square to be transposed
+    # (This isn't always true and transposition for other matrices will be added later)
+    # Returns: transposition of original matrix
+    # Errors: raises ValueError if matrix is not square
+    def get_transposition(self):
+        if (self.height != self.width):
+            raise ValueError("must be a square matrix")
+
+        transposition_matrix = Matrix(self.height, self.width)
+        for i in range(self.height):
+            transposition_row = []
+
+            for j in range(self.width):
+                transposition_row.append(self.matrix[j][i])
+            transposition_matrix.set_row(i+1, transposition_row)
+        return transposition_matrix
