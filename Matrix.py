@@ -154,3 +154,50 @@ class Matrix:
             determinant += sign*self.matrix[0][i] * reduced_matrix.get_determinant()
             sign *= -1
         return determinant
+
+
+    def get_inverse(self):
+
+        if (not self.is_invertible()):
+            raise ValueError("Matrix is not invertible")
+
+        # first we find the matrix of minors
+        matrix_of_minors = Matrix(self.height, self.width)
+        for i in range(self.height):
+
+            minor_matrix_row = []
+            for j in range(self.width):
+            
+                temp_matrix = Matrix(self.height-1, self.width-1)
+                for k in range(self.height):
+                    if (k != i):
+
+                        temp_matrix_row = []
+                        for h in range(self.width):
+                            if (h != j):
+                                temp_matrix_row.append(self.matrix[k][h])
+                        if (k < i):
+                            temp_matrix.set_row(k+1, temp_matrix_row)
+                        else:
+                            temp_matrix.set_row(k, temp_matrix_row)
+                minor_matrix_row.append(temp_matrix.get_determinant())
+            matrix_of_minors.set_row(i+1, minor_matrix_row)
+
+        # next we find the matrix of cofactors
+        sign = 1
+        for i in range(matrix_of_minors.height):
+            cofactor_row = []
+            for j in range(matrix_of_minors.width):
+                cofactor_row.append(sign*matrix_of_minors.matrix[i][j])
+                sign *= -1
+            matrix_of_minors.set_row(i+1, cofactor_row)
+
+
+        return matrix_of_minors
+
+m1 = Matrix(3,3)
+
+m1.set_row(1, [3,0,2])
+m1.set_row(2, [2,0,-2])
+m1.set_row(3, [0,1,1])
+print(m1.get_inverse().matrix)
