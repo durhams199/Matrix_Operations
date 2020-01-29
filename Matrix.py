@@ -10,6 +10,9 @@ class Matrix:
         self.width = width
         self.matrix = self.__set_matrix()
 
+    def __eq__(self, other):
+        return isinstance(other, Matrix) and self.matrix == other.matrix
+
     # private instance methods
     # Postcondition: matrix is instantiated with all values set to 0
     # Returns: matrix of zeroes with given height and width
