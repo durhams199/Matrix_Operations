@@ -11,7 +11,7 @@
  5. Calculating the determinant of a matrix
 
 ## Installation
- >= Python 3.6.4 is the only requirement
+  \>= Python 3.6.4 is the only requirement
 
 ## Usage
  In order to run tests of class constructor and methods use:
