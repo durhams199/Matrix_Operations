@@ -10,8 +10,19 @@ class Matrix:
         self.width = width
         self.matrix = self.__set_matrix()
 
+    # customization methods
+    # Parameters: other - matrix to be compared
+    # Returns: true if other is a matrix and matrices are equal false otherwise
     def __eq__(self, other):
         return isinstance(other, Matrix) and self.matrix == other.matrix
+
+    # Returns: string representation of Matrix
+    def __repr__(self):
+        string_rep = "\n"
+        for row in self.matrix:
+            string_rep = string_rep + str(row).replace(",", "") + "\n"
+
+        return string_rep
 
     # private instance methods
     # Postcondition: matrix is instantiated with all values set to 0
