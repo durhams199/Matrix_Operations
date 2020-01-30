@@ -19,11 +19,13 @@
 ### Creating a Matrix:
  In order to create a matrix you can assign it in the following way:
 > matrix_1 = Matrix(a,b)
+ 
  where "a" is the height of the matrix and "y" is the width.
  This will create an a x b matrix where all values are "0"
 ### Editing values:
  You can change values by using the set_row method in the following way:
 > matrix_1.set_row(a, [x, y, z])
+ 
  where a is the row number (from 1 to the height), and [x,y,z] is a list of values where size of list = width
 
 ### List of all current methods in Matrix class (note: these methods can only be called from a matrix instance):
@@ -73,5 +75,5 @@
 - (note: matrix must be square)
 
 
-## This class will be used in a online calculator used to visualize all of these operations
+ This class will be used in a online calculator used to visualize all of these operations
 
